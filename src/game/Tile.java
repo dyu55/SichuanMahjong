@@ -27,7 +27,7 @@ import java.util.Objects;
 
 /**
  * Tile.java
- * Loads its image from /pictures/<suit><rank>.png (e.g. wan1.png, tiao5.png, bing9.png)
+ * Loads its image from /pictures/<suit><rank>.png (e.g. wan1.png, tiao5.png, tong9.png)
  */
 public class Tile {
     public final Suit suit;

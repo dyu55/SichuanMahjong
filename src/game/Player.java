@@ -13,6 +13,7 @@
  *   - Methods: draw (to add a tile), discard (to remove a tile), checkHu (win check),
  *     checkPeng (for a Peng action), and checkGang (for a Gang action).
  */
+package game;
 import java.util.*;
 public class Player {
     private final String name;
@@ -59,7 +60,8 @@ public class Player {
     }
 
     public boolean checkHu() {
-        return HandEvaluator.isPingHu(hand);
+        boolean pingHu = HandEvaluator.isPingHu(hand);
+        return pingHu;
     }
 
     public boolean checkPeng(Tile tile) {
@@ -99,4 +101,24 @@ public class Player {
         }
         return false;
     }
+    public boolean canSelfGang(List<Tile> hand) {
+        // Use a map to count occurrences of each tile
+        Map<String, Integer> tileCount = new HashMap<>();
+
+        // Count occurrences of each unique tile
+        for (Tile tile : hand) {
+            String key = tile.suit.name() + tile.rank; // Create a unique key for each tile type
+            tileCount.put(key, tileCount.getOrDefault(key, 0) + 1);
+        }
+
+        // Check if any tile has a count of 4
+        for (Integer count : tileCount.values()) {
+            if (count >= 4) {
+                return true; // Found at least one set of 4 matching tiles
+            }
+        }
+
+        return false; // No sets of 4 matching tiles found
+    }
+
 }

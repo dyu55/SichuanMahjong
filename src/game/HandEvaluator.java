@@ -1,4 +1,4 @@
-/**
+package game; /**
  * HandEvaluator.java
  *
  * Function:
@@ -21,6 +21,34 @@ public class HandEvaluator {
                 tmp.put(tile, tmp.get(tile) - 2);
                 if (canFormSets(tmp)) return true;
             }
+        }
+        return false;
+    }
+
+    public static boolean isPingHu2(List<Tile> tiles) {
+        if ((tiles.size() - 2) % 3 != 0) return false;
+        Map<Tile, Integer> counts = new HashMap<>();
+        for (Tile t : tiles) counts.put(t, counts.getOrDefault(t, 0) + 1);
+
+        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        List<Future<Boolean>> futures = new ArrayList<>();
+
+        for (Tile tile : counts.keySet()) {
+            if (counts.get(tile) >= 2) {
+                Map<Tile, Integer> tmp = new HashMap<>(counts);
+                tmp.put(tile, tmp.get(tile) - 2);
+
+                futures.add(executorService.submit(() -> canFormSets(tmp)));
+            }
+        }
+
+        executorService.shutdown();
+        try {
+            for (Future<Boolean> future : futures) {
+                if (future.get()) return true;
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
         }
         return false;
     }
